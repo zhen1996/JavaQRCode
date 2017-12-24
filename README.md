@@ -2,7 +2,8 @@
 把zxing.org的源码拿过来，然后加了点高斯模糊的代码，做了二维码识别
 
 # 使用
-GET调用接口**/w/decode?u=your_qrcode_url**，返回JSON格式结果
+### GET /w/decode?u=your_qrcode_url
+返回JSON格式结果
 ```
 {
     "errno": 0,
