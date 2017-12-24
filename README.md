@@ -3,12 +3,20 @@
 
 # 使用
 ### GET /w/decode?u=your_qrcode_url
-返回JSON格式结果
+正确返回
 ```
 {
     "errno": 0,
     "text": "https://u.wechat.com/EMsWWNbkxMPlwwQg2BCC8Zg"
 }
 ```
+错误返回
+```
+{
+    "errno":1,
+    "text":"err: badimage"
+}
+```
+
 1. **errno**为0，表示解析成功，其他为错误
-2. **text**为解析出来的文本结果
+2. **text**为解析出来的文本结果或错误信息
