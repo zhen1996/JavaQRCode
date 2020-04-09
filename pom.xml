@@ -65,7 +65,7 @@
     <!-- This can't reference project.version as some subprojects version differently -->
     <zxing.version>3.3.2-SNAPSHOT</zxing.version>
     <android.platform>22</android.platform>
-    <jackson-version>2.9.3</jackson-version>
+    <jackson-version>2.10.3</jackson-version>
   </properties>
 
 
