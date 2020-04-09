@@ -1,9 +1,9 @@
-# SalamanderQRCode
+# QRCode
 把zxing.org的源码拿过来，然后加了点高斯模糊的代码，做了二维码识别
 
 # 使用
 ```
-docker run -it --rm -p 8888:8080 salamandermh/salamanderqrcode
+docker run -it --rm -p 8888:8080 salamandermh/qrcode
 ```
 
 # API
@@ -19,19 +19,21 @@ docker run -it --rm -p 8888:8080 salamandermh/salamanderqrcode
 解析成功
 {
     "errno": 0,
-    "text": "https://u.wechat.com/EMsWWNbkxMPlwwQg2BCC8Zg"
+    "errmsg": "解析成功",
+    "parseText": "https://u.wechat.com/EMsWWNbkxMPlwwQg2BCC8Zg"
 }
 解析错误
 {
     "errno":1,
-    "text":"err: badimage"
+    "errmsg":"err: badimage"
 }
 ```
 ## 返回参数说明
 |参数名|类型|说明|
 |--- |--- |--- |
 |errno|int|错误码，0：成功；1：失败|
-|text|string|解析信息：解析成功时为二维码对应的文本信息，解析错误时为错误信息|
+|errmsg|string|解析错误的错误信息|
+|parseText|string|解析信息：解析成功时为二维码对应的文本信息|
 
 
 ## POST /w/decode
@@ -45,16 +47,18 @@ docker run -it --rm -p 8888:8080 salamandermh/salamanderqrcode
 解析成功
 {
     "errno": 0,
-    "text": "https://u.wechat.com/EMsWWNbkxMPlwwQg2BCC8Zg"
+    "errmsg": "解析成功",
+    "parseText": "https://u.wechat.com/EMsWWNbkxMPlwwQg2BCC8Zg"
 }
 解析错误
 {
     "errno":1,
-    "text":"err: badimage"
+    "errmsg":"err: badimage"
 }
 ```
 ## 返回参数说明
 |参数名|类型|说明|
 |--- |--- |--- |
 |errno|int|错误码，0：成功；1：失败|
-|text|string|解析信息：解析成功时为二维码对应的文本信息，解析错误时为错误信息|
+|errmsg|string|解析错误的错误信息|
+|parseText|string|解析信息：解析成功时为二维码对应的文本信息|

@@ -3,11 +3,13 @@ package com.lucy.model;
 public class QRRes {
     private int errno;
 
-    private String text;
+    private String errmsg;
 
-    public QRRes(int errno, String text) {
+    private String parseText;
+
+    public QRRes(int errno, String errmsg) {
         this.errno = errno;
-        this.text = text;
+        this.errmsg = errmsg;
     }
 
 
@@ -19,11 +21,19 @@ public class QRRes {
         this.errno = errno;
     }
 
-    public String getText() {
-        return text;
+    public String getErrmsg() {
+        return errmsg;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setErrmsg(String errmsg) {
+        this.errmsg = errmsg;
+    }
+
+    public String getParseText() {
+        return parseText;
+    }
+
+    public void setParseText(String parseText) {
+        this.parseText = parseText;
     }
 }
