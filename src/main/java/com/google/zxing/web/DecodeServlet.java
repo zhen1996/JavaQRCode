@@ -198,7 +198,7 @@ public final class DecodeServlet extends HttpServlet {
                 return;
             }
             try {
-                processImage(image, request, response, 0);
+                processImage(image, request, response);
             } finally {
                 image.flush();
             }
@@ -359,7 +359,7 @@ public final class DecodeServlet extends HttpServlet {
                 return;
             }
 
-            processImage(image, request, response, 0);
+            processImage(image, request, response);
         } finally {
             image.flush();
         }
@@ -367,80 +367,12 @@ public final class DecodeServlet extends HttpServlet {
 
     private static void processImage(BufferedImage image,
                                      HttpServletRequest request,
-                                     HttpServletResponse response, int ImageFilterCount) throws IOException, ServletException {
-
-        LuminanceSource source = new BufferedImageLuminanceSource(image);
-        BinaryBitmap bitmap = new BinaryBitmap(new GlobalHistogramBinarizer(source));
-        Collection<Result> results = new ArrayList<>(1);
-
+                                     HttpServletResponse response) throws IOException, ServletException {
+        ImageRecognition imageRecognition = new ImageRecognition();
+        Collection<Result> results = null;
         try {
-
-            Reader reader = new MultiFormatReader();
-            ReaderException savedException = null;
-            try {
-                // Look for multiple barcodes
-                MultipleBarcodeReader multiReader = new GenericMultipleBarcodeReader(reader);
-                Result[] theResults = multiReader.decodeMultiple(bitmap, HINTS);
-                if (theResults != null) {
-                    results.addAll(Arrays.asList(theResults));
-                }
-            } catch (ReaderException re) {
-                savedException = re;
-            }
-
-            if (results.isEmpty()) {
-                try {
-                    // Look for pure barcode
-                    Result theResult = reader.decode(bitmap, HINTS_PURE);
-                    if (theResult != null) {
-                        results.add(theResult);
-                    }
-                } catch (ReaderException re) {
-                    savedException = re;
-                }
-            }
-
-            if (results.isEmpty()) {
-                try {
-                    // Look for normal barcode in photo
-                    Result theResult = reader.decode(bitmap, HINTS);
-                    if (theResult != null) {
-                        results.add(theResult);
-                    }
-                } catch (ReaderException re) {
-                    savedException = re;
-                }
-            }
-
-            if (results.isEmpty()) {
-                try {
-                    // Try again with other binarizer
-                    BinaryBitmap hybridBitmap = new BinaryBitmap(new HybridBinarizer(source));
-                    Result theResult = reader.decode(hybridBitmap, HINTS);
-                    if (theResult != null) {
-                        results.add(theResult);
-                    }
-                } catch (ReaderException re) {
-                    savedException = re;
-                }
-            }
-
-//            if (results.isEmpty()) {
-//                try {
-//                    throw savedException == null ? NotFoundException.getNotFoundInstance() : savedException;
-//                } catch (FormatException | ChecksumException e) {
-//                    log.info(e.toString());
-//                    errorResponse(request, response, "format");
-//                } catch (ReaderException e) { // Including NotFoundException
-//                    log.info(e.toString());
-//                    errorResponse(request, response, "notfound");
-//                }
-//                return;
-//            }
-
+            results = imageRecognition.processImage(image, 0);
         } catch (RuntimeException re) {
-            // Call out unexpected errors in the log clearly
-            log.log(Level.WARNING, "Unexpected exception from library", re);
             throw new ServletException(re);
         }
 
@@ -456,17 +388,7 @@ public final class DecodeServlet extends HttpServlet {
                 }
             }
         } else {
-            if(results.size() > 0) {
-                responseJSON(results, response);
-            } else {
-                if(ImageFilterCount == 0) {
-                    ImageFilterCount++;
-                    BufferedImage imageFilter = blurAndSharpImage(image);
-                    processImage(imageFilter, request, response, ImageFilterCount);
-                } else {
-                    responseJSON(results, response);
-                }
-            }
+            responseJSON(results, response);
         }
     }
 
